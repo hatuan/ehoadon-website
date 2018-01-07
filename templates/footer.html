@@ -1,0 +1,129 @@
+<!--footer.html-->
+            <footer id="Fotter" class="clearfix">
+
+            </footer>
+        </div>
+        
+        <!-- side menu -->
+        <div id="Side_slide" class="right dark">
+            <div class="close-wrapper">
+                <a href="#" class="close"><i class="icon-cancel-fine"></i></a>
+            </div>
+            <div class="extras">
+                <a href="http://bit.ly/1M6lijQ" class="button button_theme button_js action_button " target="_blank"><span class="button_label">Buy now</span></a>
+                <div class="extras-wrapper">
+                    <a class="icon search" href="#"><i class="icon-search-fine"></i></a>
+                </div>
+            </div>
+            <div class="search-wrapper">
+                <form id="side-form" method="get" action="#">
+                    <input type="text" class="field" name="s" id="s" placeholder="Enter your search">
+                    <input type="submit" class="submit" value="" style="display:none">
+                    <a class="submit" href="#"><i class="icon-search-fine"></i></a>
+                </form>
+            </div>
+            
+            <div class="menu_wrapper"></div>
+            <ul class="social">
+                <li class="skype">
+                    <a href="#" title="Skype"><i class="icon-skype"></i></a>
+                </li>
+                <li class="facebook">
+                    <a href="#" title="Facebook"><i class="icon-facebook"></i></a>
+                </li>
+                <li class="youtube">
+                    <a href="#" title="YouTube"><i class="icon-play"></i></a>
+                </li>
+            </ul>
+        </div>
+        <div id="body_overlay"></div>
+
+        <!-- JS -->
+        <script src="js/jquery-2.1.4.min.js"></script>
+
+        <script src="js/mfn.menu.js"></script>
+        <script src="js/jquery.plugins.js"></script>
+        <script src="js/jquery.jplayer.min.js"></script>
+        <script src="js/animations/animations.js"></script>
+        <script src="js/translate3d.js"></script>
+        <script src="js/scripts.js"></script>
+
+        <script src="plugins/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
+        <script src="plugins/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
+
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.video.min.js"></script>
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.slideanims.min.js"></script>
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.actions.min.js"></script>
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.layeranimation.min.js"></script>
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.kenburn.min.js"></script>
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.navigation.min.js"></script>
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.migration.min.js"></script>
+        <script src="plugins/rs-plugin/js/extensions/revolution.extension.parallax.min.js"></script>
+
+        <script>
+            var tpj = jQuery;
+            var revapi1;
+            tpj(document).ready(function() {
+                if (tpj("#rev_slider_1_1").revolution == undefined) {
+                    revslider_showDoubleJqueryError("#rev_slider_1_1");
+                } else {
+                    revapi1 = tpj("#rev_slider_1_1").show().revolution({
+                        sliderType: "hero",
+                        sliderLayout: "auto",
+                        dottedOverlay: "none",
+                        delay: 9000,
+                        navigation: {},
+                        visibilityLevels: [1240, 1024, 778, 480],
+                        gridwidth: 1240,
+                        gridheight: 760,
+                        lazyType: "none",
+                        parallax: {
+                            type: "scroll",
+                            origo: "enterpoint",
+                            speed: 400,
+                            levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 46, 47, 48, 49, 50, 51, 55],
+                        },
+                        shadow: 0,
+                        spinner: "spinner2",
+                        autoHeight: "off",
+                        disableProgressBar: "on",
+                        hideThumbsOnMobile: "off",
+                        hideSliderAtLimit: 0,
+                        hideCaptionAtLimit: 0,
+                        hideAllCaptionAtLilmit: 0,
+                        debugMode: false,
+                        fallbacks: {
+                            simplifyAll: "off",
+                            disableFocusListener: false,
+                        }
+                    });
+                }
+            });
+            /*]]>*/
+        </script>
+
+        <script>
+            jQuery(window).load(function() {
+                var retina = window.devicePixelRatio > 1 ? true : false;
+                if (retina) {
+                    var retinaEl = jQuery("#logo img.logo-main");
+                    var retinaLogoW = retinaEl.width();
+                    var retinaLogoH = retinaEl.height();
+                    retinaEl.attr("src", "content/betheme/images/logo-retina.png").width(retinaLogoW).height(retinaLogoH);
+                    var stickyEl = jQuery("#logo img.logo-sticky");
+                    var stickyLogoW = stickyEl.width();
+                    var stickyLogoH = stickyEl.height();
+                    stickyEl.attr("src", "content/betheme/images/logo-retina.png").width(stickyLogoW).height(stickyLogoH);
+                    var mobileEl = jQuery("#logo img.logo-mobile");
+                    var mobileLogoW = mobileEl.width();
+                    var mobileLogoH = mobileEl.height();
+                    mobileEl.attr("src", "content/betheme/images/logo-retina.png").width(mobileLogoW).height(mobileLogoH);
+                    var mobileStickyEl = jQuery("#logo img.logo-mobile-sticky");
+                    var mobileStickyLogoW = mobileStickyEl.width();
+                    var mobileStickyLogoH = mobileStickyEl.height();
+                    mobileStickyEl.attr("src", "content/betheme/images/logo-retina.png").width(mobileStickyLogoW).height(mobileStickyLogoH);
+                }
+            });
+        </script>
+    </body>
+</html>
