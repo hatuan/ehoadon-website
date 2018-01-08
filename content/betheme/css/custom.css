@@ -3,3 +3,17 @@
     top: -2px;
     font-size: 15px;
 }
+
+/*Copy #Action_bar to #Footer*/
+#Footer .contact_details {
+    color: #bbbbbb;
+}
+#Footer .contact_details {
+    float: left;
+}
+#Footer .contact_details li {
+    display: inline-block;
+    margin-right: 10px;
+    /*padding: 20px 0;*/
+    color: rgba(255, 255, 255, 0.5);
+}

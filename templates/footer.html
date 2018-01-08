@@ -1,9 +1,44 @@
 <!--footer.html-->
-            <footer id="Fotter" class="clearfix">
-
+            <footer id="Footer" class="clearfix">
+                <div class="footer_action">
+                    <div class="container">
+                        <div class="column one column_column">
+                            <a href="#" style="text-decoration: none; color: #CCC" target="_blank"><span style="font-size: 18px">Nếu quý khách muốn dùng thử <span class="themecolor">e</span><span style="color: rgb(247, 149, 2)">Invoice</span>, xin hãy <span style="color: #FFF">ĐĂNG KÝ NGAY!</span></span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer_copy">
+                    <div class="container">
+                        <div class="column one">
+                            <a id="back_to_top" class="button button_js" href="#"><i class="icon-up-open-big"></i></a>
+                            <ul class="contact_details">
+                                <li class="slogan">Nếu có câu hỏi xin hãy liên lạc</li>
+                                <li class="phone">
+                                    <i class="icon-phone"></i>
+                                    <a href="tel:02463287650">0246 3287 650</a>
+                                </li>
+                                <li class="mail">
+                                    <i class="icon-mail-line"></i>
+                                    <a href="mailto:sales@ehoadon.com.vn">sales@ehoadon.com.vn</a>
+                                </li>
+                            </ul>
+                            <ul class="social">
+                                <li class="skype">
+                                    <a href="#" title="Skype"><i class="icon-skype"></i></a>
+                                </li>
+                                <li class="facebook">
+                                    <a href="#" title="Facebook"><i class="icon-facebook"></i></a>
+                                </li>
+                                <li class="youtube">
+                                    <a href="#" title="YouTube"><i class="icon-play"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </footer>
         </div>
-        
+
         <!-- side menu -->
         <div id="Side_slide" class="right dark">
             <div class="close-wrapper">
@@ -59,6 +94,31 @@
         <script src="plugins/rs-plugin/js/extensions/revolution.extension.navigation.min.js"></script>
         <script src="plugins/rs-plugin/js/extensions/revolution.extension.migration.min.js"></script>
         <script src="plugins/rs-plugin/js/extensions/revolution.extension.parallax.min.js"></script>
+
+        <script src="http://maps.google.com/maps/api/js?sensor=false&ver=5.9"></script>
+        <script>
+            function google_maps_58af1ee65f2cb() {
+                var latlng = new google.maps.LatLng(21.004560, 105.804807);
+                var myOptions = {
+                    zoom : 17,
+                    center : latlng,
+                    mapTypeId : google.maps.MapTypeId.ROADMAP,
+                    zoomControl : true,
+                    mapTypeControl : false,
+                    streetViewControl : false,
+                    scrollwheel : false
+                };
+                var map = new google.maps.Map(document.getElementById("google-map-area-58af1ee65f2cb"), myOptions);
+                var marker = new google.maps.Marker({
+                    position : latlng,
+                    map : map
+                });
+            }
+             
+            jQuery(document).ready(function($) {
+                google_maps_58af1ee65f2cb();
+            });
+        </script> 
 
         <script>
             var tpj = jQuery;
