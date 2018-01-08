@@ -5,6 +5,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +18,19 @@ func initializeRoutes() {
 			"message": "pong",
 		})
 	})
+
+	invoiceRoutes := router.Group("/invoices")
+	{
+		// Handle GET requests at /invoices
+		invoiceRoutes.GET("", GetInvoice)
+	}
+
+	captchaRoutes := router.Group("/captcha")
+	{
+		// Handle GET requests at /captcha
+		captchaRoutes.GET("/:name", GetCaptcha)
+		captchaRoutes.GET("/", ReloadCaptcha)
+	}
 }
 
 func showIndexPage(c *gin.Context) {
@@ -28,7 +42,9 @@ func showIndexPage(c *gin.Context) {
 		"index.html",
 		// Pass the data that the page uses (in this case, 'title')
 		gin.H{
-			"title": "Home Page",
+			"title":             "eInvoice",
+			"SearchCaptchaId":   captcha.New(),
+			"RegisterCaptchaId": captcha.New(),
 		},
 	)
 }

@@ -58,12 +58,12 @@
                                         </a>
                                     </li>
                                     <li class="last">
-                                        <a href="about.html">
+                                        <a href="#about">
                                             <span>Về Chúng Tôi</span>
                                         </a>
                                     </li>
                                     <li class="last">
-                                        <a href="contact.html">
+                                        <a href="#contact">
                                             <span>Liên Hệ</span>
                                         </a>
                                     </li>
@@ -75,30 +75,45 @@
                         </div>
                         <div class="secondary_menu_wrapper"></div>
                         <div class="banner_wrapper"></div>
-                        <div class="search_wrapper" style="display: none;">
-                            <form method="get" id="searchform" action="#">
-                                <i class="icon_search icon-search-fine"></i>
-                                <a href="#" class="icon_close">
-                                    <i class="icon-cancel-fine"></i>
-                                </a>
-                                <input type="text" class="field" name="s" id="s" placeholder="Điền chuỗi xác thực hóa đơn">
-                                <input type="submit" class="submit" value="" style="display:none">
-                            </form>
-                        </div>
+
                     </div>
 
                     <div class="top_bar_right">
                         <div class="top_bar_right_wrapper">
-                            <a id="search_button" href="#" class="button button_theme button_js action_button">
-                                <span class="button_icon">
-                                    <i class="icon-search-fine"></i>
-                                </span>    
-                                <span class="button_label">Tra Cứu</span>
-                            </a>
-                            <a id="register_button" href="#" class="button button_theme button_js action_button" target="_blank">
-                                <span class="button_label">Đăng Ký</span>
-                            </a>
+                            <div class="button-flat" style="float:left;">
+                                <a id="search_button" href="#" class="button button_theme button_js action_button">
+                                    <span class="button_icon">
+                                        <i class="icon-search-fine"></i>
+                                    </span>    
+                                    <span class="button_label">Tra Cứu</span>
+                                </a>
+                                <a id="register_button" href="#" class="button button_theme button_js action_button" target="_blank">
+                                    <span class="button_label">Đăng Ký</span>
+                                </a>
+                            </div>
                         </div>
+                    </div>
+                    <div class="search_wrapper" style="display: none;">
+                        <form method="get" id="searchform" action="invoices">
+                            <a href="#" class="icon_close">
+                                <i class="icon-cancel-fine"></i>
+                            </a>
+                            <div class="input-w">
+                                <label style="color:white;">Điền chuỗi xác thực hóa đơn :</label>
+                                <input type="text" class="field" name="SearchID" id="SearchID" placeholder="" style="width:80%;">
+                            </div>
+                            <div class="input-w">
+                                <label style="color:white">Mã xác nhận:</label>
+                                <input type="text" class="field" name="captchaInput" id="captchaInput" placeholder="" style="width:150px;" maxlength="6">
+                            </div>
+                            <img src="/captcha/{{.SearchCaptchaId}}.png"/> 
+                            <input  id="captchaID" value="{{.SearchCaptchaId}}" style="display:none;">
+                            <div class="button-flat">
+                                <a class="button button_left button_size_3 button_theme button_js kill_the_icon" style="float:right;" onclick="searchInvoice()"> 
+                                    <span class="button_icon"><i class="icon-search" style="font-size: 30px;"></i></span>
+                                </a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

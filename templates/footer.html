@@ -82,6 +82,7 @@
         <script src="js/animations/animations.js"></script>
         <script src="js/translate3d.js"></script>
         <script src="js/scripts.js"></script>
+        <script src="js/download.js"></script>
 
         <script src="plugins/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
         <script src="plugins/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
@@ -184,6 +185,47 @@
                     mobileStickyEl.attr("src", "content/betheme/images/logo-retina.png").width(mobileStickyLogoW).height(mobileStickyLogoH);
                 }
             });
+        </script>
+        <script>
+
+            function base64ToArrayBuffer(base64) {
+                var binary_string =  window.atob(base64);
+                var len = binary_string.length;
+                var bytes = new Uint8Array( len );
+                for (var i = 0; i < len; i++)        {
+                    bytes[i] = binary_string.charCodeAt(i);
+                }
+                return bytes.buffer;
+            }
+
+            function arrayBufferToBase64(buffer) {
+                var binary = '';
+                var len = buffer.length;
+                for (var i = 0; i < len; i++) {
+                    binary += String.fromCharCode(buffer[i]);
+                }
+                return window.btoa( binary );
+            }
+
+
+            function searchInvoice() {
+                jQuery.ajax("/invoices",
+                    {
+                        dataType: 'json',
+                        data: {
+                            "s": jQuery("#SearchID").val(),
+                            "captchaInput": jQuery("#captchaInput").val(),
+                            "captchaID" : jQuery("#captchaID").val(),
+                        }
+                    }
+                ).done(function(response, status) {
+                    download("data:application/pdf;base64,"+response, jQuery("#SearchID").val() + ".pdf", "application/pdf");
+                    jQuery("#captchaInput").val("");
+                }).fail(function(response, status) {
+                    //TODO : Thong bao sai captcha, chuoi xac thuc sai (file khong co ...)
+                    alert( "error" );
+                });
+		    }
         </script>
     </body>
 </html>

@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "k9pGz1TGLVnIWIhvKIR9OTKLae4=",
+			"path": "github.com/dchest/captcha",
+			"revision": "6a29415a8364ec2971fdc62d9e415ed53fc20410",
+			"revisionTime": "2017-06-22T15:38:21Z"
+		},
+		{
 			"checksumSHA1": "BhMowD2DIKSd9qq8Pzh7Y3mh2/w=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",
