@@ -28,7 +28,6 @@ func init() {
 	router.Static("/styles", "./styles")
 	router.Static("/css", "./styles")
 	router.StaticFile("/favicon.ico", "./favicon.ico")
-	router.StaticFile("/index.html", "./index.html")
 }
 
 func GetRoute() *gin.Engine {
@@ -38,6 +37,11 @@ func GetRoute() *gin.Engine {
 func initializeRoutes() {
 
 	router.GET("/", controllers.ShowIndexPage)
+	router.GET("/index.html", controllers.ShowIndexPage)
+	router.GET("/index", controllers.ShowIndexPage)
+
+	router.GET("/register", controllers.ShowRegisterPage)
+	router.GET("/register.html", controllers.ShowRegisterPage)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

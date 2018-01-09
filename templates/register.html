@@ -1,0 +1,112 @@
+<!--register.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "headerHomePage.html" .}}
+
+<div id="Content">
+    <div class="content_wrapper clearfix">
+        <div class="sections_group">
+            <div class="section section-border-top section-uc-2">
+                <div class="section_wrapper clearfix">
+                    <div class="items_group clearfix">
+                        <!-- Page Title-->
+                        <!-- One full width row-->
+                        <div class="column one column_fancy_heading">
+                            <div class="fancy_heading fancy_heading_icon">
+                                <div data-anim-type="bounceIn" class="animate bounceIn">
+                                    <span class="icon_top"><i class="icon-clock"></i></span>
+                                    <h2>Coming Soon</h2>
+                                    <div class="inside">
+                                        <span class="big">We are working on website very hard. Estimated remaining time is:</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="downcount" data-date="12/30/2017 12:00:00" data-offset="+3">
+                            <!-- One Fourth (1/4) Column -->
+                            <div class="column one-fourth column_quick_fact">
+                                <div class="quick_fact">
+                                    <div data-anim-type="zoomIn" class="animate zoomIn">
+                                        <div class="number days">
+                                            07
+                                        </div>
+                                        <h3 class="title">days</h3>
+                                        <hr class="hr_narrow">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- One Fourth (1/4) Column -->
+                            <div class="column one-fourth column_quick_fact">
+                                <div class="quick_fact">
+                                    <div data-anim-type="zoomIn" class="animate zoomIn">
+                                        <div class="number hours">
+                                            00
+                                        </div>
+                                        <h3 class="title">hours</h3>
+                                        <hr class="hr_narrow">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- One Fourth (1/4) Column -->
+                            <div class="column one-fourth column_quick_fact">
+                                <div class="quick_fact">
+                                    <div data-anim-type="zoomIn" class="animate zoomIn">
+                                        <div class="number minutes">
+                                            00
+                                        </div>
+                                        <h3 class="title">minutes</h3>
+                                        <hr class="hr_narrow">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- One Fourth (1/4) Column -->
+                            <div class="column one-fourth column_quick_fact">
+                                <div class="quick_fact">
+                                    <div data-anim-type="zoomIn" class="animate zoomIn">
+                                        <div class="number seconds">
+                                            00
+                                        </div>
+                                        <h3 class="title">seconds</h3>
+                                        <hr class="hr_narrow">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section section-border-top section-uc-3">
+                <div class="section_wrapper clearfix">
+                    <div class="items_group clearfix">
+                        <!-- One Fourth (1/4) Column -->
+                        <div class="column one-fourth column_column"></div>
+                        <!-- One Second (1/2) Column -->
+                        <div class="column one-second column_column">
+                            <div data-anim-type="fadeInUpLarge" class="animate fadeInUpLarge">
+                                <div class="intro-form-wrap">
+                                    <form id="newsletterform">
+                                        <h4 class="flv_style_37">Gửi mail cho tôi khi chức năng đăng ký hoạt động:</h4>
+                                        <label>Tên:</label>
+                                        <span>
+                                                <input type="text" id="name_news" name="name_news" size="40" aria-required="true" aria-invalid="false" placeholder="Your name" />
+                                            </span>
+                                        <label>E-mail:</label>
+                                        <span>
+                                                <input type="email" id="email_news" name="email_news" size="40" aria-required="true" aria-invalid="false" placeholder="Your email" />
+                                            </span>
+                                        <input type="button" value="Send Message" id="submit" onClick="return check_values_news();">
+                                    </form>
+                                    <div id="confirmation"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- One Fourth (1/4) Column -->
+                        <div class="column one-fourth column_column"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}
