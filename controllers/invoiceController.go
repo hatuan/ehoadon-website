@@ -38,7 +38,7 @@ func GetInvoice(c *gin.Context) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			c.AbortWithStatusJSON(http.StatusBadRequest, map[string]interface{}{"data": "FileNotFound"})
-			c.AbortWithStatus(http.StatusNotFound)
+			return
 		}
 	}
 

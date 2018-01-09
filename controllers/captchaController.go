@@ -34,11 +34,8 @@ func GetCaptcha(c *gin.Context) {
 
 // ReloadCaptcha router to handle the post request of sign up page and get a new capche image and audio.
 func ReloadCaptcha(c *gin.Context) {
-	update := c.Param("update")
-	if update == "true" {
-		c.JSON(http.StatusOK, gin.H{
-			"status":    "reloadCaptcha",
-			"captchaid": captcha.New(),
-		})
-	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":    "reloadCaptcha",
+		"captchaid": captcha.New(),
+	})
 }
