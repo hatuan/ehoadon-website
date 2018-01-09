@@ -1,4 +1,4 @@
 ## Install
-npm install -g bower
-npm install -g glup
-npm install -g del
+npm install -g bower  
+npm install -g glup  
+npm install -g del  
