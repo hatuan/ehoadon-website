@@ -1,6 +1,6 @@
 // handlers.invoice.go
 
-package main
+package controllers
 
 import (
 	"bufio"
