@@ -9,6 +9,7 @@ _test
 invoice_files
 dist
 node_modules
+.vagrant
 
 # Architecture specific extensions/prefixes
 *.[568vq]
