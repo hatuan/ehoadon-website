@@ -45,3 +45,30 @@
 .input-w input::-moz-selection {
     background: black;
 }
+
+#registerform .column {
+    margin-bottom: 10px;
+}
+
+#registerform .column input[type="text"], #registerform .column input[type="email"] {
+    width: 100%;
+}
+
+#registerWrapper input[type="date"], #registerWrapper input[type="email"], #registerWrapper input[type="number"], #registerWrapper input[type="password"], #registerWrapper input[type="search"], #registerWrapper input[type="tel"], #registerWrapper input[type="text"], #registerWrapper input[type="url"], #registerWrapper select, #registerWrapper textarea {
+    padding: 10px;
+    outline: none;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    margin-bottom: 0;
+    font-size: 13px;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}

@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,7 +16,8 @@ func ShowRegisterPage(c *gin.Context) {
 		"register.html",
 		// Pass the data that the page uses (in this case, 'title')
 		gin.H{
-			"title": "eInvoice",
+			"title":     "eInvoice",
+			"CaptchaId": captcha.New(),
 		},
 	)
 }
