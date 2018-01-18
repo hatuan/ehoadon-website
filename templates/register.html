@@ -1,7 +1,7 @@
 <!--register.html-->
 
 <!--Embed the header.html template at this location-->
-{{ template "headerHomePage.html" .}}
+{{ template "header.html" .}}
 
 <div id="Content">
     <div class="content_wrapper clearfix">
@@ -9,107 +9,125 @@
             <div class="section section-border-top" style="padding-top:30px; padding-bottom:30px;">
                 <div class="section_wrapper clearfix">
                     <div class="items_group clearfix">
-                        <div class="column one-fourth column_column"></div>
-                        <div class="column two-fourth column_column">
+                        <div class="column one column_column">
                             <div data-anim-type="fadeInUpLarge" class="animate fadeInUpLarge">
                                 <div id="registerWrapper">
-                                    <form id="registerform">
-                                        <div class="column one">
+                                    <form id="registerform" name="registerform" method="POST" action="register" novalidate>
+                                        <div class="column one column_column" style="padding-bottom:20px;">
                                             <div class="fancy_heading">
                                                 <h2 class="title">XIN MỜI QUÝ KHÁCH ĐĂNG KÝ THÔNG TIN</h4>
                                             </div>
                                         </div>
-                                        <div class="column two-third">
+                                        <div class="column two-third column_column">
                                             <label>Tên Công Ty:</label>
                                             <span>
-                                                <input type="text" id="name" name="name" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="Description" name="Description" required placeholder="" value="{{.Register.Description}}"/>
                                             </span>
                                         </div>                                        
-                                        <div class="column one-third">
+                                        <div class="column one-third column_column">
                                             <label>Mã Số Thuế:</label>
                                             <span>
-                                                <input type="text" id="vatnumber" name="vatnumber" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="VatNumber" name="VatNumber" required placeholder="" value="{{.Register.VatNumber}}"/>
                                             </span>
                                         </div>
                                         <div class="column one">
+                                            <!-- <hr class="hr_narrow "> -->
+                                        </div>
+                                        <div class="column one column_column">
                                             <label>Địa Chỉ:</label>
                                             <span>
-                                                <input type="text" id="address" name="address" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="CompanyAddress" name="CompanyAddress" required placeholder="" value="{{.Register.CompanyAddress}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one">
+                                        <div class="column one column_column">
                                             <label>Địa Chỉ Liên Lạc:</label>
                                             <span>
-                                                <input type="text" id="address_transition" name="address_transition" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="AddressTransition" name="AddressTransition" required placeholder="" value="{{.Register.AddressTransition}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one">
+                                            <!-- <hr class="hr_narrow "> -->
+                                        </div>
+                                        <div class="column one-fourth column_column">
                                             <label>Điện thoại:</label>
                                             <span>
-                                                <input type="text" id="telephone" name="telephone" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="Telephone" name="Telephone" required placeholder="" value="{{.Register.Telephone}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one-fourth column_column">
                                             <label>Fax:</label>
                                             <span>
-                                                <input type="text" id="fax" name="fax" aria-required="false" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="Fax" name="Fax" placeholder="" value="{{.Register.Fax}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one-fourth column_column">
                                             <label>Email:</label>
                                             <span>
-                                                <input type="email" id="email" name="email" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="email" id="Email" name="Email" required placeholder="" value="{{.Register.Email}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one-fourth column_column">
                                             <label>Website:</label>
                                             <span>
-                                                <input type="text" id="website" name="website" aria-required="false" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="Website" name="Website" required placeholder="" value="{{.Register.Website}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one">
+                                            <!-- <hr class="hr_narrow "> -->
+                                        </div>
+                                        <div class="column one-fourth column_column">
                                             <label>Người đại diện:</label>
                                             <span>
-                                                <input type="text" id="telephone" name="telephone" aria-required="false" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="RepresentativeName" name="RepresentativeName" placeholder="" value="{{.Register.RepresentativeName}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one-fourth column_column">
                                             <label>Chức vụ:</label>
                                             <span>
-                                                <input type="text" id="fax" name="fax" aria-required="false" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="RepresentativePosition" name="RepresentativePosition" placeholder="" value="{{.Register.RepresentativePosition}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one-fourth column_column">
                                             <label>Người liên lạc:</label>
                                             <span>
-                                                <input type="email" id="email" name="email" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="ContactName" name="ContactName" required placeholder="" value="{{.Register.ContactName}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
+                                        <div class="column one-fourth column_column">
                                             <label>Mobile:</label>
                                             <span>
-                                                <input type="text" id="website" name="website" aria-required="true" aria-invalid="false" placeholder="" />
+                                                <input type="text" id="Mobile" name="Mobile" required placeholder="" value="{{.Register.Mobile}}"/>
                                             </span>
                                         </div>
-                                        <div class="column one-fourth">
-                                            <img id="captchaImg" src="/captcha/{{.CaptchaId}}.png"/> 
-                                            <input  id="captchaID" value="{{.CaptchaId}}" style="display:none;">
+                                        <div class="column one">
+                                            <!-- <hr class="hr_narrow "> -->
+                                        </div>
+                                        <div class="column one-fourth column_column">
+                                            <img id="CaptchaImg" src="/captcha/{{.CaptchaID}}.png"/> 
+                                            <input name="CaptchaID" id="CaptchaID" value="{{.CaptchaID}}" style="display:none;">
                                             <label>Mã xác nhận:</label>
-                                            <input type="text" class="field" name="captchaInput" id="captchaInput" placeholder="" maxlength="6">
-                                        </div>
-                                        <div class="column one">
                                             <span>
-                                                <input type="checkbox" id="confirm" name="confirm" aria-required="true" aria-invalid="false"/> Tôi cam đoan và chịu trách nhiệm các khai báo của tôi là đúng sự thật
+                                                <input type="text" class="field" name="CaptchaInput" id="CaptchaInput" placeholder="" maxlength="6">
+                                                {{if .CaptchaError}}
+                                                    <label id="CaptchaInput-error" class="error" for="CaptchaInput">Mã xác nhận không đúng</label>
+                                                {{end}}
                                             </span>
                                         </div>
                                         <div class="column one">
-                                            <input type="button" value="Đăng Ký" id="submit" onClick="return register_new_company();">
+                                            <!-- <hr class="hr_narrow "> -->
+                                        </div>
+                                        <div class="column one column_column">
+                                            <span>
+                                                <input type="checkbox" id="Confirm" name="Confirm" /> Tôi cam đoan và chịu trách nhiệm các khai báo của tôi là đúng sự thật
+                                            </span>
+                                        </div>
+                                        <div class="column one column_column">
+                                            <button  type="summit" id="submit">Đăng Ký</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="column one-fourth column_column"></div>
                     </div>
                 </div>
             </div>

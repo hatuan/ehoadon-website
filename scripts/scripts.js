@@ -9,15 +9,66 @@ function google_maps_58af1ee65f2cb() {
         streetViewControl : false,
         scrollwheel : false
     };
-    var map = new google.maps.Map(document.getElementById("google-map-area-58af1ee65f2cb"), myOptions);
-    var marker = new google.maps.Marker({
-        position : latlng,
-        map : map
-    });
+    var displayID = document.getElementById("google-map-area-58af1ee65f2cb");
+    if(displayID != undefined) {
+        var marker = new google.maps.Marker({
+            position : latlng,
+            map :  new google.maps.Map(displayID, myOptions)
+        });
+    }
 }
  
 jQuery(document).ready(function($) {
     google_maps_58af1ee65f2cb();
+
+    //show #mfn-rev-slider if in home
+    if(window.location.pathname == "/" || window.location.pathname == "/index" || window.location.pathname == "/index.html") {
+        $("#mfn-rev-slider").show();
+    } else {
+        $("#mfn-rev-slider").hide();
+    }
+
+    //Validation RegisterForm
+    $("form[name='registerform']").validate({
+        rules: {
+            Description: "required",
+            VatNumber: "required",
+            CompanyAddress: "required",
+            AddressTransition:"required",
+            Telephone: "required",
+            Email: {
+                required: true,
+                email: true
+            },
+            Website: {
+                required: false,
+                url: true
+            },
+            ContactName:"required",
+            Mobile: "required",
+            CaptchaInput: "required",
+        },
+        messages: {
+            Description: "Tên công ty không được để trống",
+            VatNumber: "Mã số thuế không được để trống",
+            CompanyAddress: "Địa chỉ công ty không được để trống",
+            AddressTransition: "Địa chỉ làm việc công ty không được để trống",
+            Telephone: "Điện thoại không được để trống",
+            Email: {
+                required: "Email không được để trống",
+                email: "Không đúng định dạng Email"
+            },
+            Website: {
+                url: "Không đúng định dạng URL, cập nhật theo định dạng http://..."
+            },
+            ContactName: "Người liên lạc không được để trống",
+            Mobile: "Mobile không được để trống",
+            CaptchaInput: "Mã xác nhận không được để trống"
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+    });
 });
 
 var tpj = jQuery;
@@ -107,19 +158,19 @@ function searchInvoice() {
             dataType: 'json',
             data: {
                 "s": jQuery("#SearchID").val(),
-                "captchaInput": jQuery("#captchaInput").val(),
-                "captchaID" : jQuery("#captchaID").val(),
+                "CaptchaInput": jQuery("#CaptchaInput").val(),
+                "CaptchaID" : jQuery("#CaptchaID").val(),
             }
         }
     ).done(function(response, status) {
         download("data:application/pdf;base64,"+response, jQuery("#SearchID").val() + ".pdf", "application/pdf");
-        jQuery("#captchaInput").val("");
+        jQuery("#CaptchaInput").val("");
     }).fail(function( jqXHR, textStatus ) {
         //TODO : Thong bao sai captcha, chuoi xac thuc sai (file khong co ...)
         var response =  JSON.parse(jqXHR.responseText);
         if(response.data) {
             recaptcha();
-            $("#captchaInput").val("");
+            $("#CaptchaInput").val("");
             if(response.data == "FileNotFound")
                 $("#input-err").text("Không tìm thấy file - Chuỗi xác thực hóa đơn bị sai !");
         }
@@ -134,10 +185,10 @@ function recaptcha() {
         async: false
     })
     .done(function(response, status) {
-            $("#captchaImg").attr('src', "");
+            $("#CaptchaImg").attr('src', "");
             setTimeout(function(){
-                $("#captchaImg").attr('src', "/captcha/" + response.captchaid +".png");
-                $("#captchaID").val(response.captchaid);
+                $("#CaptchaImg").attr('src', "/captcha/" + response.captchaid +".png");
+                $("#CaptchaID").val(response.captchaid);
         }, 0);
     })
     .fail(function(response, status) {

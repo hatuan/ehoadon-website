@@ -17,7 +17,7 @@ func ShowIndexPage(c *gin.Context) {
 		// Pass the data that the page uses (in this case, 'title')
 		gin.H{
 			"title":     "eInvoice",
-			"CaptchaId": captcha.New(),
+			"CaptchaID": captcha.New(),
 		},
 	)
 }

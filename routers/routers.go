@@ -42,6 +42,7 @@ func initializeRoutes() {
 
 	router.GET("/register", controllers.ShowRegisterPage)
 	router.GET("/register.html", controllers.ShowRegisterPage)
+	router.POST("/register", controllers.RegisterNewCompany)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

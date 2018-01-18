@@ -17,8 +17,8 @@ import (
 
 func GetInvoice(c *gin.Context) {
 	invoiceID := c.Query("s")
-	CaptchaInput := c.Query("captchaInput")
-	CaptchaID := c.Query("captchaID")
+	CaptchaInput := c.Query("CaptchaInput")
+	CaptchaID := c.Query("CaptchaID")
 
 	if invoiceID == "" || CaptchaInput == "" || CaptchaID == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
