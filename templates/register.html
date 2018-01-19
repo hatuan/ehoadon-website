@@ -10,6 +10,7 @@
                 <div class="section_wrapper clearfix">
                     <div class="items_group clearfix">
                         <div class="column one column_column">
+                            {{if not .ShowActiveMsg}}
                             <div data-anim-type="fadeInUpLarge" class="animate fadeInUpLarge">
                                 <div id="registerWrapper">
                                     <form id="registerform" name="registerform" method="POST" action="register" novalidate>
@@ -127,6 +128,15 @@
                                     </form>
                                 </div>
                             </div>
+                            {{else}}
+                            <div id="registerWrapper">
+                                <div class="column one column_column" style="padding-top:20px; padding-bottom:20px;">
+                                    <div class="fancy_heading">
+                                        <h2 class="title">Xin mời quý khách vào địa chỉ email {{.Register.Email}} để hoàn tất đăng ký</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            {{end}}
                         </div>
                     </div>
                 </div>

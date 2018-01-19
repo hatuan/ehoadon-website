@@ -22,7 +22,8 @@ type DatabaseInfo struct {
 }
 
 type settings struct {
-	ListenURL          string       `json:"listen_url"`
+	ListenHTTP         string       `json:"listen_http"`
+	ListenHTTPS        string       `json:"listen_https"`
 	PrivateKeyPath     string       `json:"privatekey_path"`
 	PublicKeyPath      string       `json:"publickey_path"`
 	CertKeyPath        string       `json:"certkey_path"`
@@ -55,4 +56,9 @@ func LoadSettingsByEnv(env string) {
 		//log.Panic("Error while parsing config file ", jsonErr)
 		panic(err)
 	}
+}
+
+func (s *settings) GetDbConn() string {
+	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
+		s.Database.User, s.Database.Password, s.Database.Name, s.Database.Host, s.Database.Port)
 }

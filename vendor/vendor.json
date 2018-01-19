@@ -45,10 +45,46 @@
 			"revisionTime": "2017-11-13T18:07:20Z"
 		},
 		{
+			"checksumSHA1": "vP9GhO1A0xDhuniKilBwWTGOwW0=",
+			"path": "github.com/jmoiron/sqlx",
+			"revision": "de8647470aafe4854c976707c431dbe1eb2822c6",
+			"revisionTime": "2017-12-11T23:49:05Z"
+		},
+		{
+			"checksumSHA1": "JxArBxGNRy8PAAM5Rv6gzyuGgu8=",
+			"path": "github.com/jmoiron/sqlx/reflectx",
+			"revision": "de8647470aafe4854c976707c431dbe1eb2822c6",
+			"revisionTime": "2017-12-11T23:49:05Z"
+		},
+		{
+			"checksumSHA1": "PRn3rwujagX4C3l2r20tRw6MjHY=",
+			"path": "github.com/lib/pq",
+			"revision": "27ea5d92de30060e7121ddd543fe14e9a327e0cc",
+			"revisionTime": "2018-01-18T03:57:37Z"
+		},
+		{
+			"checksumSHA1": "GX2hcQP8YqrXH+laJJIxUFsqoxU=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "27ea5d92de30060e7121ddd543fe14e9a327e0cc",
+			"revisionTime": "2018-01-18T03:57:37Z"
+		},
+		{
 			"checksumSHA1": "kum8izZy1+pVfDiApW5hT2HoH1w=",
 			"path": "github.com/mattn/go-isatty",
 			"revision": "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c",
 			"revisionTime": "2017-11-07T05:05:31Z"
+		},
+		{
+			"checksumSHA1": "+RPbt/bqx8qmTbdc2bL0cjCbVNg=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "36e9d2ebbde5e3f13ab2e25625fd453271d6522e",
+			"revisionTime": "2018-01-03T17:44:51Z"
+		},
+		{
+			"checksumSHA1": "aJqeQDWJt0cx5bLBIs8mSNnOvZM=",
+			"path": "github.com/shopspring/decimal",
+			"revision": "8dffa2b7c7022feee4e1f55180695e79ca4261d4",
+			"revisionTime": "2018-01-02T19:16:03Z"
 		},
 		{
 			"checksumSHA1": "6nJCt2+37att8n5RMCatF0LPBMQ=",
