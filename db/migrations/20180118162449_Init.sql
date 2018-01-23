@@ -71,6 +71,8 @@ CREATE INDEX IF NOT EXISTS idx_client_currency_lcy ON client USING btree (curren
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_client_active_code ON client USING btree (activated_code);
 
+CREATE INDEX IF NOT EXISTS idx_client_vat_number ON client USING btree (vat_number);
+
 -- +goose Down
 -- SQL section 'Down' is executed when this migration is rolled back
 DROP TABLE IF EXISTS client;

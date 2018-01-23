@@ -4,7 +4,7 @@
 # can use environment variable expansion in your dbconf.yml. Ex "open: $DATABASE_URL"
 production:
     driver: postgres
-    open: user=postgres dbname=ehoadon-master port=5432 sslmode=disable
+    open: user=postgres dbname=ehoadon_master port=5432 sslmode=disable
 development:
     driver: postgres
-    open: user=postgres dbname=ehoadon-master port=5432 sslmode=disable
+    open: user=postgres dbname=ehoadon_master port=5432 sslmode=disable

@@ -5,6 +5,7 @@ package routers
 import (
 	"erpvietnam/ehoadon-website/controllers"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,11 +14,10 @@ var router *gin.Engine
 func init() {
 	router = gin.Default()
 
+	store := sessions.NewCookieStore([]byte("b2344aed-8ec3-41dc-964b-4da318a7475f"))
+	router.Use(sessions.Sessions("ehoadon", store))
+
 	router.LoadHTMLGlob("templates/*")
-
-	// Initialize the routes
-	initializeRoutes()
-
 	// Static files
 	router.Static("/assets", "./assets")
 	router.Static("/content", "./content")
@@ -28,6 +28,9 @@ func init() {
 	router.Static("/styles", "./styles")
 	router.Static("/css", "./styles")
 	router.StaticFile("/favicon.ico", "./favicon.ico")
+
+	// Initialize the routes
+	initializeRoutes()
 }
 
 func GetRoute() *gin.Engine {
@@ -36,6 +39,8 @@ func GetRoute() *gin.Engine {
 
 func initializeRoutes() {
 
+	router.NoRoute(controllers.PageNotFound404)
+
 	router.GET("/", controllers.ShowIndexPage)
 	router.GET("/index.html", controllers.ShowIndexPage)
 	router.GET("/index", controllers.ShowIndexPage)
@@ -43,6 +48,9 @@ func initializeRoutes() {
 	router.GET("/register", controllers.ShowRegisterPage)
 	router.GET("/register.html", controllers.ShowRegisterPage)
 	router.POST("/register", controllers.RegisterNewCompany)
+
+	router.GET("/active", controllers.RegisterActive)
+	router.GET("/active/:active_code", controllers.RegisterActive)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

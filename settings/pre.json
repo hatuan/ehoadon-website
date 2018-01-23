@@ -9,7 +9,7 @@
 		"driver_name":"postgres",
 		"user":"postgres",
 		"password":"postgres",
-		"name":"ehoadon-master",
+		"name":"ehoadon_master",
 		"port":"5432",
 		"host":"127.0.0.1"
 	},

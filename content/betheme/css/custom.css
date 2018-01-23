@@ -77,3 +77,9 @@ label.error {
     color: #ff0000;
     font-size: 12px;
 }
+
+#Error_404 {
+    overflow: unset !important;
+    position: unset !important;
+    margin-top: unset !important;
+}

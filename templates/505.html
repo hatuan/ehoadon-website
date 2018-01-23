@@ -1,0 +1,29 @@
+<!--404.html-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<div id="Content">
+    <div class="content_wrapper clearfix">
+        <div class="sections_group">
+            <div class="section section-border-top" style="padding-top:30px; padding-bottom:30px;">
+                <div class="section_wrapper clearfix">
+                    <div id="Error_404" class="items_group clearfix">
+                        <div class="column one">
+                            <div class="error_pic">
+                                <i class="icon-traffic-cone"></i>
+                            </div>
+                            <div class="error_desk">
+                                <h2>Ooops... Error 505</h2>
+                                <h4>We are sorry, there is internal server error</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

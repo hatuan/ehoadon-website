@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql/driver"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -16,6 +17,7 @@ var (
 type TransactionalInformation struct {
 	ReturnStatus     bool
 	ReturnMessage    []string
+	ReturnError      []error
 	ValidationErrors map[string]InterfaceArray
 	TotalPages       int
 	TotalRows        int
@@ -57,4 +59,24 @@ func (a InterfaceArray) Value() (driver.Value, error) {
 func q(s string) string {
 	re := strings.NewReplacer("'", "''")
 	return "'" + re.Replace(s) + "'"
+}
+
+func InArray(val interface{}, array interface{}) (exists bool, index int) {
+	exists = false
+	index = -1
+
+	switch reflect.TypeOf(array).Kind() {
+	case reflect.Slice:
+		s := reflect.ValueOf(array)
+
+		for i := 0; i < s.Len(); i++ {
+			if reflect.DeepEqual(val, s.Index(i).Interface()) == true {
+				index = i
+				exists = true
+				return
+			}
+		}
+	}
+
+	return
 }

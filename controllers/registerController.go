@@ -32,7 +32,6 @@ type RegisterForm struct {
 }
 
 func ShowRegisterPage(c *gin.Context) {
-
 	// Call the HTML method of the Context to render a template
 	c.HTML(
 		// Set the HTTP status to 200 (OK)
@@ -49,7 +48,6 @@ func ShowRegisterPage(c *gin.Context) {
 }
 
 func RegisterNewCompany(c *gin.Context) {
-
 	register := RegisterForm{}
 	c.Bind(&register)
 
@@ -90,6 +88,17 @@ func RegisterNewCompany(c *gin.Context) {
 	}
 	defer models.DB.Close()
 
+	//session := sessions.Default(c)
+	//var lastRegister time.Time
+	//v := session.Get("lastRegister")
+	//if v == nil {
+	//	lastRegister = time.Now()
+	//} else {
+	//	lastRegister = v.(time.Time)
+	//}
+	//session.Set("lastRegister", lastRegister)
+	//session.Save()
+
 	activeCode, _ := uuid.NewV4()
 	client := models.Client{
 		Description:                 register.Description,
@@ -128,32 +137,16 @@ func RegisterNewCompany(c *gin.Context) {
 
 	transInfo := client.Update()
 	if transInfo.ReturnStatus {
-		mail := models.NewMail([]string{client.Email, "hatuan05@gmail.com"}, "Thông báo V/v đăng ký sử dụng hóa đơn điện tử eInvoice", "")
+		mail := models.NewMail(client.Email, "Thông báo V/v đăng ký sử dụng hóa đơn điện tử eInvoice", "")
 		err = mail.ParseTemplate("./templates/mailActive.html", client)
 		if err != nil {
-			c.HTML(
-				http.StatusInternalServerError,
-				"register.html",
-				gin.H{
-					"title":     "eInvoice",
-					"Register":  register,
-					"CaptchaID": captcha.New(),
-				},
-			)
+			ServerInternalError505(c)
 			return
 		}
 		ok, _ := mail.SendEmail()
 
 		if !ok {
-			c.HTML(
-				http.StatusInternalServerError,
-				"register.html",
-				gin.H{
-					"title":     "eInvoice",
-					"Register":  register,
-					"CaptchaID": captcha.New(),
-				},
-			)
+			ServerInternalError505(c)
 		} else {
 			c.HTML(
 				http.StatusOK,
@@ -167,14 +160,45 @@ func RegisterNewCompany(c *gin.Context) {
 			)
 		}
 	} else {
-		c.HTML(
-			http.StatusInternalServerError,
-			"register.html",
-			gin.H{
-				"title":     "eInvoice",
-				"Register":  register,
-				"CaptchaID": captcha.New(),
-			},
-		)
+		ServerInternalError505(c)
 	}
+}
+
+func RegisterActive(c *gin.Context) {
+	activeCode := c.Query("active_code")
+
+	if activeCode == "" {
+		activeCode = c.Param("active_code")
+	}
+
+	if activeCode == "" {
+		PageNotFound404(c)
+		return
+	}
+
+	var err error
+	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer models.DB.Close()
+
+	client := models.Client{}
+	transInfo := client.Active(activeCode)
+
+	if !transInfo.ReturnStatus {
+		notFound, _ := models.InArray(models.ErrClientActiveCodeNotFound, transInfo.ReturnError)
+		if notFound {
+			PageNotFound404(c)
+			return
+		}
+
+		codeExpired, _ := models.InArray(models.ErrClientActiveCodeExpired, transInfo.ReturnError)
+		if codeExpired {
+			//TODO : Hien thi thong bao va gui lai mail
+			return
+		}
+	}
+
+	//active
 }
