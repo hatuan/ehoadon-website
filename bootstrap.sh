@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Golang installation variables
-VERSION="1.9.2"
+VERSION="1.9.3"
 OS="linux"
 ARCH="amd64"
 
@@ -59,6 +59,8 @@ GP="/home/vagrant/go"
 mkdir -p "$GP/src"
 mkdir -p "$GP/pkg"
 mkdir -p "$GP/bin"
+
+sudo chown -R vagrant:vagrant /home/vagrant/go
 
 # Write environment variables, other prompt and automatic cd into /vagrant in the bashrc
 echo "Editing .bashrc ..."
