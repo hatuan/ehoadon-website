@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"bytes"
 	"erpvietnam/ehoadon-website/models"
 	. "erpvietnam/ehoadon-website/settings"
+	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -259,4 +262,54 @@ func RegisterActive(c *gin.Context) {
 	}
 
 	//active
+}
+
+func RegisterInitDB(c *gin.Context) {
+	clientID := c.Query("client_id")
+
+	if clientID == "" {
+		clientID = c.Param("client_id")
+	}
+
+	if clientID == "" {
+		c.String(
+			http.StatusBadRequest,
+			"",
+		)
+		return
+	}
+	var err error
+	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer models.DB.Close()
+
+	id, _ := strconv.ParseInt(clientID, 10, 64)
+
+	client := models.Client{}
+	_ = client.Get(id)
+	initDB := client.GetInitDB()
+
+	t, err := template.ParseFiles("./templates/initdb.sql")
+	if err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+	buf := new(bytes.Buffer)
+	if err = t.Execute(buf, initDB); err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+
+	c.String(
+		http.StatusOK,
+		buf.String(),
+	)
 }

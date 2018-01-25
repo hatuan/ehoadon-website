@@ -52,6 +52,8 @@ func initializeRoutes() {
 
 	router.GET("/active", controllers.RegisterActive)
 	router.GET("/active/:active_code", controllers.RegisterActive)
+	router.GET("/initdb", controllers.RegisterInitDB)
+	router.GET("/initdb/:client_id", controllers.RegisterInitDB)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"erpvietnam/ehoadon-website/crypto"
 	"erpvietnam/ehoadon-website/log"
 	"erpvietnam/ehoadon-website/utils"
 	"fmt"
@@ -414,4 +415,23 @@ func (c *Client) createDocker(name string) bool {
 	}
 
 	return false
+}
+
+type InitDB struct {
+	UserProfile User
+	Client      Client
+}
+
+func (c *Client) GetInitDB() InitDB {
+	salt := utils.RandStringBytes(5)
+
+	initDB := InitDB{
+		UserProfile: User{
+			Password: crypto.HashPassword("123456", salt),
+			Salt:     salt,
+			Email:    (*c).Email,
+		},
+		Client: *c,
+	}
+	return initDB
 }

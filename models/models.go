@@ -80,3 +80,14 @@ func InArray(val interface{}, array interface{}) (exists bool, index int) {
 
 	return
 }
+
+//IDGenerator create new ID
+func IDGenerator() (int64, error) {
+	var id int64
+	err := DB.Get(&id, "SELECT id_generator()")
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
