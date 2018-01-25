@@ -38,7 +38,10 @@ jQuery(document).ready(function($) {
                     url: "/register/check_company_code"
                 }
             },
-            VatNumber: "required",
+            VatNumber: {
+                required: true,
+                pattern: /^\d+(-\d+)*$/
+            },
             CompanyAddress: "required",
             AddressTransition:"required",
             Telephone: "required",
@@ -60,7 +63,10 @@ jQuery(document).ready(function($) {
                 required: "Mã công ty không được để trống",
                 remote: "Mã công ty đã có, xin hãy chọn mã khác"
             },
-            VatNumber: "Mã số thuế không được để trống",
+            VatNumber: {
+                required: "Mã số thuế không được để trống",
+                pattern: "Mã số thuế cập nhật sai"
+            },
             CompanyAddress: "Địa chỉ công ty không được để trống",
             AddressTransition: "Địa chỉ làm việc công ty không được để trống",
             Telephone: "Điện thoại không được để trống",
