@@ -8,7 +8,6 @@ import (
 	"html/template"
 	"net"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/shopspring/decimal"
@@ -22,6 +21,7 @@ import (
 // Client represents the client model
 type Client struct {
 	ClientID                    *int64          `db:"id" json:",string"`
+	Code                        string          `db:"code"`
 	Description                 string          `db:"description"`
 	IsActivated                 bool            `db:"is_activated"`
 	ActivatedCode               string          `db:"activated_code"`
@@ -77,11 +77,20 @@ var ErrClientNotFound = errors.New("Client not found")
 // ErrClientValidate indicates there was validate error
 var ErrClientValidate = errors.New("Client has validate error")
 
+// ErrClientCodeNotSpecified indicates there was no code given by the user
+var ErrClientCodeNotSpecified = errors.New("Client's code not specified")
+
+// ErrClientCodeDuplicate indicates there was duplicate of code given by the user
+var ErrClientCodeDuplicate = errors.New("Client's code is duplicate")
+
 // ErrClientDescriptionNotSpecified indicates there was no name given by the user
 var ErrClientDescriptionNotSpecified = errors.New("Client's Description not specified")
 
 // ErrClientAddressNotSpecified indicates there was no name given by the user
 var ErrClientAddressNotSpecified = errors.New("Client's Address not specified")
+
+// ErrClientFatal indicates there was fatal error
+var ErrClientFatal = errors.New("Client has fatal error")
 
 // Validate checks to make sure there are no invalid fields in a submitted
 func (c *Client) Validate() map[string]InterfaceArray {
@@ -95,6 +104,26 @@ func (c *Client) Validate() map[string]InterfaceArray {
 		validationErrors["Address"] = append(validationErrors["Address"], ErrClientAddressNotSpecified.Error())
 	}
 
+	if c.Code == "" {
+		validationErrors["Code"] = append(validationErrors["Code"], ErrClientCodeNotSpecified.Error())
+	}
+
+	if c.Code != "" {
+		var otherID string
+		ID := int64(0)
+		if c.ClientID != nil {
+			ID = *c.ClientID
+		}
+		err := DB.Get(&otherID, "SELECT id FROM client WHERE code = $1 AND id != $2", c.Code, ID)
+		if err != nil && err != sql.ErrNoRows {
+			log.Error(err)
+			validationErrors["Fatal"] = append(validationErrors["Fatal"], ErrClientFatal.Error())
+		}
+		if otherID != "" && err != sql.ErrNoRows {
+			validationErrors["Code"] = append(validationErrors["Code"], ErrClientCodeDuplicate.Error())
+		}
+	}
+
 	return validationErrors
 }
 
@@ -103,6 +132,21 @@ func (c *Client) Get(id int64) error {
 	err := DB.QueryRowx("SELECT client.* "+
 		" FROM client "+
 		" WHERE client.id=$1 ", id).StructScan(c)
+	if err == sql.ErrNoRows {
+		return ErrClientNotFound
+	} else if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) GetByCode(code string) error {
+
+	err := DB.QueryRowx("SELECT client.* "+
+		" FROM client "+
+		" WHERE client.code=$1 ", code).StructScan(c)
 	if err == sql.ErrNoRows {
 		return ErrClientNotFound
 	} else if err != nil {
@@ -132,13 +176,7 @@ func (c *Client) Active(activeCode string) TransactionalInformation {
 	//	return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientActiveCodeExpired.Error()}, ReturnError: []error{ErrClientActiveCodeExpired}}
 	//}
 
-	var countVatNumber int
-	err = DB.Get(&countVatNumber, "SELECT COALESCE(count(vat_number), 0) FROM client WHERE vat_number = $1", c.VatNumber)
-
-	if err != nil {
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientCreateNewDBFail.Error()}, ReturnError: []error{ErrClientCreateNewDBFail}}
-	}
-	objectName := fmt.Sprintf("%s_%s", template.HTMLEscapeString(c.VatNumber), strconv.FormatInt(int64(countVatNumber+1), 10))
+	objectName := fmt.Sprintf("%s_%s", template.HTMLEscapeString(c.VatNumber), template.HTMLEscapeString(c.Code))
 
 	success := c.createDB(objectName)
 	if !success {
@@ -191,10 +229,11 @@ func (c *Client) Active(activeCode string) TransactionalInformation {
 
 func (c *Client) Update() TransactionalInformation {
 	if validateErrs := c.Validate(); len(validateErrs) != 0 {
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientValidate.Error()}, ValidationErrors: validateErrs}
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientValidate.Error()}, ReturnError: []error{ErrClientValidate}, ValidationErrors: validateErrs}
 	}
 
 	stmt, _ := DB.PrepareNamed("INSERT INTO client as client(id, " +
+		" code, " +
 		" description, " +
 		" is_activated, " +
 		" activated_code, " +
@@ -228,6 +267,7 @@ func (c *Client) Update() TransactionalInformation {
 		" rec_created_at, " +
 		" rec_modified_at) " +
 		" VALUES ( COALESCE(:id, id_generator()), " +
+		" :code, " +
 		" :description, " +
 		" :is_activated, " +
 		" :activated_code, " +
@@ -261,6 +301,7 @@ func (c *Client) Update() TransactionalInformation {
 		" :rec_created_at, " +
 		" :rec_modified_at) " +
 		" ON CONFLICT ON CONSTRAINT pk_client DO UPDATE SET " +
+		" code								=	EXCLUDED.code, " +
 		" description						=	EXCLUDED.description, " +
 		" is_activated						=	EXCLUDED.is_activated, " +
 		" activated_code					=	EXCLUDED.activated_code, " +

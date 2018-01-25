@@ -5,6 +5,7 @@ import (
 	. "erpvietnam/ehoadon-website/settings"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dchest/captcha"
@@ -15,6 +16,7 @@ import (
 )
 
 type RegisterForm struct {
+	Code                   string `form:"Code" binding:"required"`
 	Description            string `form:"Description" binding:"required"`
 	VatNumber              string `form:"VatNumber" binding:"required"`
 	CompanyAddress         string `form:"CompanyAddress" binding:"required"`
@@ -44,6 +46,47 @@ func ShowRegisterPage(c *gin.Context) {
 			"Register":  RegisterForm{},
 			"CaptchaID": captcha.New(),
 		},
+	)
+}
+
+func CheckCompanyCode(c *gin.Context) {
+	code := c.Query("Code")
+
+	if code == "" {
+		c.JSON(
+			http.StatusBadRequest,
+			"false",
+		)
+		return
+	}
+
+	var err error
+	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer models.DB.Close()
+
+	client := models.Client{}
+	err = client.GetByCode(code)
+
+	if err == models.ErrClientNotFound {
+		c.JSON(
+			http.StatusOK,
+			"true",
+		)
+		return
+	} else if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			nil,
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		nil,
 	)
 }
 
@@ -101,6 +144,7 @@ func RegisterNewCompany(c *gin.Context) {
 
 	activeCode, _ := uuid.NewV4()
 	client := models.Client{
+		Code:                        strings.ToUpper(register.Code),
 		Description:                 register.Description,
 		IsActivated:                 false,
 		ActivatedCode:               activeCode.String(),
@@ -160,7 +204,21 @@ func RegisterNewCompany(c *gin.Context) {
 			)
 		}
 	} else {
-		ServerInternalError505(c)
+		if len(transInfo.ValidationErrors) > 0 {
+			c.HTML(
+				http.StatusOK,
+				"register.html",
+				gin.H{
+					"title":            "eInvoice",
+					"Register":         register,
+					"Validation":       false,
+					"ValidationErrors": transInfo.ValidationErrors,
+					"CaptchaID":        captcha.New(),
+				},
+			)
+		} else {
+			ServerInternalError505(c)
+		}
 	}
 }
 

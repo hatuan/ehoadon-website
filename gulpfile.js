@@ -38,7 +38,7 @@ gulp.task('build-js', function() {
 //
 /////////////////////////////////////////////////////////////////////////////////////
 gulp.task('copy', function () {
-    return gulp.src(['assets/**/*', 'content/**/*', 'images/**/*', 'plugins/**/*', 'settings/**/*', 'styles/**/*', 'templates/**/*'], {
+    return gulp.src(['assets/**/*', 'content/**/*', 'images/**/*', 'plugins/**/*', 'settings/**/*', '!settings/**/*.go', 'styles/**/*', 'templates/**/*', 'db/migrations/*', 'goose'], {
         base:"."
     })
     .pipe(gulp.dest('dist'));

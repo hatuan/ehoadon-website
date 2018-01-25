@@ -48,6 +48,7 @@ func initializeRoutes() {
 	router.GET("/register", controllers.ShowRegisterPage)
 	router.GET("/register.html", controllers.ShowRegisterPage)
 	router.POST("/register", controllers.RegisterNewCompany)
+	router.GET("/register/check_company_code", controllers.CheckCompanyCode)
 
 	router.GET("/active", controllers.RegisterActive)
 	router.GET("/active/:active_code", controllers.RegisterActive)

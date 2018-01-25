@@ -32,6 +32,12 @@ jQuery(document).ready(function($) {
     $("form[name='registerform']").validate({
         rules: {
             Description: "required",
+            Code: {
+                required: true,
+                remote: {
+                    url: "/register/check_company_code"
+                }
+            },
             VatNumber: "required",
             CompanyAddress: "required",
             AddressTransition:"required",
@@ -50,6 +56,10 @@ jQuery(document).ready(function($) {
         },
         messages: {
             Description: "Tên công ty không được để trống",
+            Code: {
+                required: "Mã công ty không được để trống",
+                remote: "Mã công ty đã có, xin hãy chọn mã khác"
+            },
             VatNumber: "Mã số thuế không được để trống",
             CompanyAddress: "Địa chỉ công ty không được để trống",
             AddressTransition: "Địa chỉ làm việc công ty không được để trống",
@@ -209,4 +219,24 @@ jQuery("#search_button_new").click(function(e) {
     } else {
         jQuery('#Top_bar .search_wrapper').fadeOut();
     }
+});
+
+
+/* ---------------------------------------------------------------------------
+* Get Company Key
+* The Quick Brown Fox -> TQBF
+* --------------------------------------------------------------------------- */
+function GetCompanyCode(companyName) {
+    var array1 = companyName.split(' ');
+    var newarray1 = [];
+      
+    for(var x = 0; x < array1.length; x++) {
+        newarray1.push(array1[x].charAt(0).toUpperCase());
+    }
+    return newarray1.join('');
+}
+
+$("#Description").on('change keydown paste input', function(){
+    var companyCode = GetCompanyCode($("#Description").val());
+    $("#Code").val(companyCode);
 });
