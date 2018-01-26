@@ -401,7 +401,7 @@ func (c *Client) createDB(name string) bool {
 func (c *Client) createDocker(name string) bool {
 
 	sshConfig := &ssh.ClientConfig{
-		User: "user",
+		User: settings.Settings.SSHUser,
 		Auth: []ssh.AuthMethod{
 			utils.PublicKeyFile(settings.Settings.SSHPrivateKeyPath),
 		},

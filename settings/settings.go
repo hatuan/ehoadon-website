@@ -22,6 +22,7 @@ type DatabaseInfo struct {
 }
 
 type settings struct {
+	SSHUser           string       `json:"ssh_user"`
 	SSHPrivateKeyPath string       `json:"ssh_privatekey_path"`
 	SSHHost           string       `json:"ssh_host"`
 	Database          DatabaseInfo `json:"database"`

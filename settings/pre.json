@@ -1,5 +1,6 @@
 {
-	"ssh_privatekey_path": "c:\\Projects\\GoWork\\src\\erpvietnam\\ehoadon\\.vagrant\\machines\\default\\virtualbox\\private_key",
+	"ssh_user": "vagrant",
+	"ssh_privatekey_path": "c:/Projects/GoWork/src/erpvietnam/ehoadon-website/.vagrant/machines/default/virtualbox/private_key",
 	"ssh_host": "127.0.0.1:2222",
 	"database" : {
 		"driver_name":"postgres",
