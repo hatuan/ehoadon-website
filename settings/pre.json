@@ -1,10 +1,6 @@
 {
-	"listen_http":"0.0.0.0:8080",
-	"listen_https":"0.0.0.0:8443",
-	"privatekey_path": ".\\settings\\keys\\server.key",
-	"publickey_path": ".\\settings\\keys\\server.key.pub",
-	"certkey_path": ".\\settings\\keys\\server.crt",
-	"jwt_expiration_delta": 72,
+	"ssh_privatekey_path": "c:\\Projects\\GoWork\\src\\erpvietnam\\ehoadon\\.vagrant\\machines\\default\\virtualbox\\private_key",
+	"ssh_host": "127.0.0.1:2222",
 	"database" : {
 		"driver_name":"postgres",
 		"user":"postgres",

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"erpvietnam/ehoadon-website/crypto"
 	"erpvietnam/ehoadon-website/log"
+	"erpvietnam/ehoadon-website/settings"
 	"erpvietnam/ehoadon-website/utils"
 	"fmt"
 	"html/template"
@@ -402,7 +403,7 @@ func (c *Client) createDocker(name string) bool {
 	sshConfig := &ssh.ClientConfig{
 		User: "user",
 		Auth: []ssh.AuthMethod{
-			utils.PublicKeyFile("~/.ssh/id_rsa"),
+			utils.PublicKeyFile(settings.Settings.SSHPrivateKeyPath),
 		},
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
@@ -411,8 +412,7 @@ func (c *Client) createDocker(name string) bool {
 
 	client := &utils.SSHClient{
 		Config: sshConfig,
-		Host:   "172.19.0.1",
-		Port:   22,
+		Host:   settings.Settings.SSHHost,
 	}
 
 	cmd := &utils.SSHCommand{

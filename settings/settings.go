@@ -22,14 +22,10 @@ type DatabaseInfo struct {
 }
 
 type settings struct {
-	ListenHTTP         string       `json:"listen_http"`
-	ListenHTTPS        string       `json:"listen_https"`
-	PrivateKeyPath     string       `json:"privatekey_path"`
-	PublicKeyPath      string       `json:"publickey_path"`
-	CertKeyPath        string       `json:"certkey_path"`
-	JWTExpirationDelta int          `json:"jwt_expiration_delta"`
-	Database           DatabaseInfo `json:"database"`
-	InvoiceFilePath    string       `json:"invoice_file_path"`
+	SSHPrivateKeyPath string       `json:"ssh_privatekey_path"`
+	SSHHost           string       `json:"ssh_host"`
+	Database          DatabaseInfo `json:"database"`
+	InvoiceFilePath   string       `json:"invoice_file_path"`
 }
 
 // Settings contains the initialized configuration struct

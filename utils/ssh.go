@@ -23,8 +23,7 @@ import (
 
 	client := &SSHClient{
 		Config: sshConfig,
-		Host:   "example.com",
-		Port:   22,
+		Host:   "example.com:22",
 	}
 
 	cmd := &SSHCommand{
@@ -53,7 +52,6 @@ type SSHCommand struct {
 type SSHClient struct {
 	Config *ssh.ClientConfig
 	Host   string
-	Port   int
 }
 
 func (client *SSHClient) RunCommand(cmd *SSHCommand) error {
@@ -115,7 +113,7 @@ func (client *SSHClient) prepareCommand(session *ssh.Session, cmd *SSHCommand) e
 }
 
 func (client *SSHClient) newSession() (*ssh.Session, error) {
-	connection, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", client.Host, client.Port), client.Config)
+	connection, err := ssh.Dial("tcp", fmt.Sprintf("%s", client.Host), client.Config)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to dial: %s", err)
 	}
