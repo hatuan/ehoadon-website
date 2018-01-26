@@ -400,9 +400,9 @@ func (c *Client) createDB(name string) bool {
 func (c *Client) createDocker(name string) bool {
 
 	sshConfig := &ssh.ClientConfig{
-		User: "vagrant",
+		User: "user",
 		Auth: []ssh.AuthMethod{
-			utils.PublicKeyFile("c:/Projects/GoWork/src/erpvietnam/ehoadon-website/.vagrant/machines/default/virtualbox/private_key"),
+			utils.PublicKeyFile("~/.ssh/id_rsa"),
 		},
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
@@ -411,8 +411,8 @@ func (c *Client) createDocker(name string) bool {
 
 	client := &utils.SSHClient{
 		Config: sshConfig,
-		Host:   "127.0.0.1",
-		Port:   2222,
+		Host:   "172.19.0.1",
+		Port:   22,
 	}
 
 	cmd := &utils.SSHCommand{
