@@ -44,7 +44,7 @@ VALUES (
     {{.UserProfile.Email}}, 
     '2014-04-25 10:22:39.007887+07', 
     '', 
-    0,  --client_id will update late
+    {{.Client.ClientID}},
     'vi-VN') RETURNING id INTO _UserID;
 
 INSERT INTO "client"(
@@ -160,7 +160,6 @@ VALUES (
     NOW()) RETURNING id INTO _CurrencyLCYId;
 
 UPDATE client SET currency_lcy_id = _CurrencyLCYId;
-UPDATE user_profile SET client_id = _ClientID;
 
 END$$;
 -- +goose StatementEnd

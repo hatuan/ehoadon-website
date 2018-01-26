@@ -4,6 +4,8 @@ package routers
 
 import (
 	"erpvietnam/ehoadon-website/controllers"
+	"html/template"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -17,7 +19,11 @@ func init() {
 	store := sessions.NewCookieStore([]byte("b2344aed-8ec3-41dc-964b-4da318a7475f"))
 	router.Use(sessions.Sessions("ehoadon", store))
 
+	router.SetFuncMap(template.FuncMap{
+		"ToLower": strings.ToLower,
+	})
 	router.LoadHTMLGlob("templates/*")
+
 	// Static files
 	router.Static("/assets", "./assets")
 	router.Static("/content", "./content")
@@ -52,9 +58,15 @@ func initializeRoutes() {
 
 	router.GET("/active", controllers.RegisterActive)
 	router.GET("/active/:active_code", controllers.RegisterActive)
-	router.GET("/initdb", controllers.RegisterInitDB)
-	router.GET("/initdb/:client_id", controllers.RegisterInitDB)
 
+	initRoutes := router.Group("/init")
+	{
+		initRoutes.GET("/name", controllers.RegisterInitName)
+		initRoutes.GET("/db", controllers.RegisterInitDB)
+		initRoutes.GET("/docker_compose", controllers.RegisterInitDockerCompose)
+		initRoutes.GET("/app_setting", controllers.RegisterInitAppSetting)
+		initRoutes.GET("/goose_dbconf", controllers.RegisterInitGooseDbconf)
+	}
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",

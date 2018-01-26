@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"net"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/shopspring/decimal"
@@ -158,6 +159,21 @@ func (c *Client) GetByCode(code string) error {
 	return nil
 }
 
+func (c *Client) GetByActiveCode(activeCode string) error {
+
+	err := DB.QueryRowx("SELECT client.* "+
+		" FROM client "+
+		" WHERE client.activated_code=$1 ", activeCode).StructScan(c)
+	if err == sql.ErrNoRows {
+		return ErrClientNotFound
+	} else if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
 func (c *Client) Active(activeCode string) TransactionalInformation {
 
 	err := DB.QueryRowx("SELECT client.* "+
@@ -177,7 +193,7 @@ func (c *Client) Active(activeCode string) TransactionalInformation {
 	//	return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientActiveCodeExpired.Error()}, ReturnError: []error{ErrClientActiveCodeExpired}}
 	//}
 
-	objectName := fmt.Sprintf("%s_%s", template.HTMLEscapeString(c.VatNumber), template.HTMLEscapeString(c.Code))
+	objectName := fmt.Sprintf("%s", strings.ToLower(template.HTMLEscapeString(c.Code)))
 
 	success := c.createDB(objectName)
 	if !success {

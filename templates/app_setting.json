@@ -1,0 +1,18 @@
+{
+    "listen_http":"0.0.0.0:8080", 
+    "listen_https":"0.0.0.0:8443", 
+    "privatekey_path": "./settings/keys/server.key", 
+    "publickey_path": "./settings/keys/server.key.pub", 
+    "certkey_path": "./settings/keys/server.crt", 
+    "jwt_expiration_delta": 72, 
+    "database" : { 
+        "driver_name":"postgres", 
+        "user":"user_{{.Code | ToLower}}", 
+        "password":"{{.Code}}", 
+        "name":"ehoadon_{{.Code | ToLower}}", 
+        "port":"5432", 
+        "host":"ehoadon_data" 
+    },
+    "invoice_file_path": "./static/invoice_files" 
+}
+    

@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -264,14 +263,14 @@ func RegisterActive(c *gin.Context) {
 	//active
 }
 
-func RegisterInitDB(c *gin.Context) {
-	clientID := c.Query("client_id")
+func RegisterInitName(c *gin.Context) {
+	clientCode := c.Query("client_code")
 
-	if clientID == "" {
-		clientID = c.Param("client_id")
+	if clientCode == "" {
+		clientCode = c.Param("client_code")
 	}
 
-	if clientID == "" {
+	if clientCode == "" {
 		c.String(
 			http.StatusBadRequest,
 			"",
@@ -285,13 +284,44 @@ func RegisterInitDB(c *gin.Context) {
 	}
 	defer models.DB.Close()
 
-	id, _ := strconv.ParseInt(clientID, 10, 64)
+	client := models.Client{}
+	_ = client.GetByCode(clientCode)
+
+	c.String(
+		http.StatusOK,
+		client.Code,
+	)
+}
+
+func RegisterInitDB(c *gin.Context) {
+	clientCode := c.Query("client_code")
+
+	if clientCode == "" {
+		clientCode = c.Param("client_code")
+	}
+
+	if clientCode == "" {
+		c.String(
+			http.StatusBadRequest,
+			"",
+		)
+		return
+	}
+	var err error
+	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer models.DB.Close()
 
 	client := models.Client{}
-	_ = client.Get(id)
+	_ = client.GetByCode(clientCode)
 	initDB := client.GetInitDB()
 
-	t, err := template.ParseFiles("./templates/initdb.sql")
+	funcMap := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+	t, err := template.New("initdb.sql").Funcs(funcMap).ParseFiles("./templates/initdb.sql")
 	if err != nil {
 		c.String(
 			http.StatusInternalServerError,
@@ -301,6 +331,156 @@ func RegisterInitDB(c *gin.Context) {
 	}
 	buf := new(bytes.Buffer)
 	if err = t.Execute(buf, initDB); err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+
+	c.String(
+		http.StatusOK,
+		buf.String(),
+	)
+}
+
+func RegisterInitDockerCompose(c *gin.Context) {
+	clientCode := c.Query("client_code")
+
+	if clientCode == "" {
+		clientCode = c.Param("client_code")
+	}
+
+	if clientCode == "" {
+		c.String(
+			http.StatusBadRequest,
+			"",
+		)
+		return
+	}
+	var err error
+	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer models.DB.Close()
+
+	client := models.Client{}
+	_ = client.GetByCode(clientCode)
+
+	funcMap := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+	t, err := template.New("docker-compose.yaml").Funcs(funcMap).ParseFiles("./templates/docker-compose.yaml")
+	if err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+	buf := new(bytes.Buffer)
+	if err = t.Execute(buf, client); err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+
+	c.String(
+		http.StatusOK,
+		buf.String(),
+	)
+}
+
+func RegisterInitAppSetting(c *gin.Context) {
+	clientCode := c.Query("client_code")
+
+	if clientCode == "" {
+		clientCode = c.Param("client_code")
+	}
+
+	if clientCode == "" {
+		c.String(
+			http.StatusBadRequest,
+			"",
+		)
+		return
+	}
+	var err error
+	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer models.DB.Close()
+
+	client := models.Client{}
+	_ = client.GetByCode(clientCode)
+
+	funcMap := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+	t, err := template.New("app_setting.json").Funcs(funcMap).ParseFiles("./templates/app_setting.json")
+	if err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+	buf := new(bytes.Buffer)
+	if err = t.Execute(buf, client); err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+
+	c.String(
+		http.StatusOK,
+		buf.String(),
+	)
+}
+
+func RegisterInitGooseDbconf(c *gin.Context) {
+	clientCode := c.Query("client_code")
+
+	if clientCode == "" {
+		clientCode = c.Param("client_code")
+	}
+
+	if clientCode == "" {
+		c.String(
+			http.StatusBadRequest,
+			"",
+		)
+		return
+	}
+	var err error
+	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer models.DB.Close()
+
+	client := models.Client{}
+	_ = client.GetByCode(clientCode)
+
+	funcMap := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+	t, err := template.New("goose_dbconf.yaml").Funcs(funcMap).ParseFiles("./templates/goose_dbconf.yaml")
+	if err != nil {
+		c.String(
+			http.StatusInternalServerError,
+			"",
+		)
+		return
+	}
+	buf := new(bytes.Buffer)
+	if err = t.Execute(buf, client); err != nil {
 		c.String(
 			http.StatusInternalServerError,
 			"",
