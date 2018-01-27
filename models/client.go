@@ -9,9 +9,7 @@ import (
 	"fmt"
 	"html/template"
 	"net"
-	"os"
 	"strings"
-	"time"
 
 	"github.com/shopspring/decimal"
 	"golang.org/x/crypto/ssh"
@@ -68,11 +66,8 @@ var ErrClientActiveCodeExpired = errors.New("Client Active Code Expired")
 // ErrClientActiveCodeNotFound is thrown when do not found any Client with active code.
 var ErrClientActiveCodeNotFound = errors.New("Client Active Code not found")
 
-// ErrClientCreateNewDBFail is thrown when create new db fail
-var ErrClientCreateNewDBFail = errors.New("Client create new DB fail")
-
-// ErrClientCreateNewDockerFail is thrown when create new docker fail
-var ErrClientCreateNewDockerFail = errors.New("Client create new docker fail")
+// ErrClientCreateNewCompanyFail is thrown when create new company fail
+var ErrClientCreateNewCompanyFail = errors.New("Client create new company fail")
 
 // ErrClientNotFound is thrown when do not found any Client.
 var ErrClientNotFound = errors.New("Client not found")
@@ -168,7 +163,7 @@ func (c *Client) GetByActiveCode(activeCode string) error {
 		" FROM client "+
 		" WHERE client.activated_code=$1 ", activeCode).StructScan(c)
 	if err == sql.ErrNoRows {
-		return ErrClientNotFound
+		return ErrClientActiveCodeNotFound
 	} else if err != nil {
 		log.Error(err)
 		return err
@@ -198,51 +193,14 @@ func (c *Client) Active(activeCode string) TransactionalInformation {
 
 	objectName := fmt.Sprintf("%s", strings.ToLower(template.HTMLEscapeString(c.Code)))
 
-	success := c.createDB(objectName)
-	if !success {
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientCreateNewDBFail.Error()}, ReturnError: []error{ErrClientCreateNewDBFail}}
-	}
-	success = c.createDocker(objectName)
+	success := make(chan bool)
+	go createNewCompany(objectName, success)
 
-	if !success {
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientCreateNewDockerFail.Error()}, ReturnError: []error{ErrClientCreateNewDockerFail}}
-	}
-	stmt, _ := DB.PrepareNamed("UPDATE client SET " +
-		" is_activated		= :is_activated, " +
-		" activated_code	= '', " +
-		" rec_modified_at	= :rec_modified_at " +
-		" WHERE activated_code = :activated_code " +
-		" RETURNING id")
+	result := <-success
 
-	type ActiveData struct {
-		IsActivated bool       `db:"is_activated"`
-		ActiveCode  string     `db:"activated_code"`
-		RecModified *Timestamp `db:"rec_modified_at"`
-	}
-
-	var activeData = ActiveData{
-		IsActivated: true,
-		ActiveCode:  activeCode,
-		RecModified: &Timestamp{time.Now()},
-	}
-
-	var id int64
-	err = stmt.Get(&id, activeData)
-
-	if err != nil && err == sql.ErrNoRows {
-		log.Error(err)
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientActiveCodeNotFound.Error()}, ReturnError: []error{ErrClientActiveCodeNotFound}}
-	} else if err != nil {
-		log.Error(err)
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}, ReturnError: []error{err}}
-	}
-
-	c.ClientID = &id
-	err = c.Get(*c.ClientID)
-	if err == sql.ErrNoRows {
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientNotFound.Error()}, ReturnError: []error{ErrClientNotFound}}
-	} else if err != nil {
-		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	if !result {
+		log.Error(ErrClientCreateNewCompanyFail)
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientCreateNewCompanyFail.Error()}, ReturnError: []error{ErrClientCreateNewCompanyFail}}
 	}
 	return TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
@@ -378,67 +336,7 @@ func (c *Client) Update() TransactionalInformation {
 	return TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
-func (c *Client) createDB(name string) bool {
-
-	sshConfig := &ssh.ClientConfig{
-		User: settings.Settings.SSHUser,
-		Auth: []ssh.AuthMethod{
-			utils.PublicKeyFile(settings.Settings.SSHPrivateKeyPath),
-		},
-		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
-			return nil
-		},
-	}
-
-	client := &utils.SSHClient{
-		Config: sshConfig,
-		Host:   settings.Settings.SSHHost,
-	}
-
-	cmd := &utils.SSHCommand{
-		Path:   fmt.Sprintf("docker exec -it ehoadon_data psql --user postgres -c \"CREATE USER user_%s WITH ENCRYPTED PASSWORD '%s';\"", name, name),
-		Env:    []string{},
-		Stdin:  os.Stdin,
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
-	}
-
-	if err := client.RunCommand(cmd); err != nil {
-		log.Error("command run error: ", err)
-		return false
-	}
-
-	cmd = &utils.SSHCommand{
-		Path:   fmt.Sprintf("docker exec -it ehoadon_data psql --user postgres -c \"CREATE DATABASE ehoadon_%s WITH OWNER = user_%s ENCODING='UTF-8';\"", name, name),
-		Env:    []string{},
-		Stdin:  os.Stdin,
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
-	}
-
-	if err := client.RunCommand(cmd); err != nil {
-		log.Error("command run error: ", err)
-		return false
-	}
-
-	cmd = &utils.SSHCommand{
-		Path:   fmt.Sprintf("docker exec -it ehoadon_data psql --user postgres -c \"REVOKE CONNECT ON DATABASE ehoadon_%s FROM public;\"", name),
-		Env:    []string{},
-		Stdin:  os.Stdin,
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
-	}
-
-	if err := client.RunCommand(cmd); err != nil {
-		log.Error("command run error: ", err)
-		return false
-	}
-
-	return true
-}
-
-func (c *Client) createDocker(name string) bool {
-
+func createNewCompany(name string, success chan bool) {
 	sshConfig := &ssh.ClientConfig{
 		User: settings.Settings.SSHUser,
 		Auth: []ssh.AuthMethod{
@@ -456,20 +354,18 @@ func (c *Client) createDocker(name string) bool {
 
 	cmd := &utils.SSHCommand{
 		Path: fmt.Sprintf("NEW_COMPANY_NAME=%s /ehoadon/create_new_company.sh", name),
-		Env: []string{
-			fmt.Sprintf("LC_NEW_COMPANY_NAME=%s" + name),
-		},
-		Stdin:  os.Stdin,
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
+		Env:  []string{},
+		//Stdin:  os.Stdin,
+		//Stdout: os.Stdout,
+		//Stderr: os.Stderr,
 	}
 
 	if err := client.RunCommand(cmd); err != nil {
 		log.Error("command run error: ", err)
-		return false
+		success <- false
 	}
 
-	return true
+	success <- true
 }
 
 type InitDB struct {

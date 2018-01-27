@@ -111,10 +111,10 @@
 			"revisionTime": "2018-01-15T17:38:07Z"
 		},
 		{
-			"checksumSHA1": "vP9GhO1A0xDhuniKilBwWTGOwW0=",
+			"checksumSHA1": "dCN3VGUzWIAJPjq+7MXjvXjbRHs=",
 			"path": "github.com/jmoiron/sqlx",
-			"revision": "de8647470aafe4854c976707c431dbe1eb2822c6",
-			"revisionTime": "2017-12-11T23:49:05Z"
+			"revision": "05cef0741ade10ca668982355b3f3f0bcf0ff0a8",
+			"revisionTime": "2018-01-24T20:44:10Z"
 		},
 		{
 			"checksumSHA1": "JxArBxGNRy8PAAM5Rv6gzyuGgu8=",
