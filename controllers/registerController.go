@@ -258,9 +258,34 @@ func RegisterActive(c *gin.Context) {
 			//TODO : Hien thi thong bao va gui lai mail
 			return
 		}
+
+		c.HTML(
+			http.StatusOK,
+			"register.html",
+			gin.H{
+				"title":              "eInvoice",
+				"ShowActiveErrorMsg": true,
+			},
+		)
+
+		return
 	}
 
 	//active
+
+	mail := models.NewMail(client.Email, "Thông báo V/v đăng ký sử dụng hóa đơn điện tử eInvoice", "")
+	_ = mail.ParseTemplate("./templates/mailActiveSuccess.html", client)
+	_, _ = mail.SendEmail()
+
+	c.HTML(
+		http.StatusOK,
+		"register.html",
+		gin.H{
+			"title":                "eInvoice",
+			"Code":                 client.Code,
+			"ShowActiveSuccessMsg": true,
+		},
+	)
 }
 
 func RegisterInitName(c *gin.Context) {
@@ -277,6 +302,7 @@ func RegisterInitName(c *gin.Context) {
 		)
 		return
 	}
+
 	var err error
 	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
 	if err != nil {
@@ -307,6 +333,7 @@ func RegisterInitDB(c *gin.Context) {
 		)
 		return
 	}
+
 	var err error
 	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
 	if err != nil {
@@ -358,6 +385,7 @@ func RegisterInitDockerCompose(c *gin.Context) {
 		)
 		return
 	}
+
 	var err error
 	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
 	if err != nil {
@@ -408,6 +436,7 @@ func RegisterInitAppSetting(c *gin.Context) {
 		)
 		return
 	}
+
 	var err error
 	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
 	if err != nil {
@@ -458,6 +487,7 @@ func RegisterInitGooseDbconf(c *gin.Context) {
 		)
 		return
 	}
+
 	var err error
 	models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
 	if err != nil {

@@ -10,7 +10,7 @@
                 <div class="section_wrapper clearfix">
                     <div class="items_group clearfix">
                         <div class="column one column_column">
-                            {{if not .ShowActiveMsg}}
+                            {{if (and (and (not .ShowActiveMsg) (not .ShowActiveSuccessMsg)) (not .ShowActiveErrorMsg)) }}
                             <div data-anim-type="fadeInUpLarge" class="animate fadeInUpLarge">
                                 <div id="registerWrapper">
                                     <form id="registerform" name="registerform" method="POST" action="register" novalidate>
@@ -134,11 +134,37 @@
                                     </form>
                                 </div>
                             </div>
-                            {{else}}
+                            {{else if .ShowActiveMsg }}
                             <div id="registerWrapper">
                                 <div class="column one column_column" style="padding-top:20px; padding-bottom:20px;">
                                     <div class="fancy_heading">
-                                        <h2 class="title">Xin mời quý khách vào địa chỉ email {{.Register.Email}} để hoàn tất đăng ký</h4>
+                                        <h2 class="title">Xin mời quý khách vào địa chỉ email {{.Register.Email}} để hoàn tất đăng ký</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            {{else if .ShowActiveSuccessMsg }}
+                            <div id="registerWrapper">
+                                <div class="column one column_column" style="padding-top:20px; padding-bottom:20px;">
+                                    <div class="fancy_heading">
+                                        <h2 class="title">Xin cảm ơn quý khách đã đăng ký sử dụng hóa đơn điện tử <a href="https://ehoadon.com.vn"> eInvoice</a></h2>
+                                        <br/>
+                                        <br/>
+                                        Yêu cầu đăng ký của quý khách đã thành công. 
+                                        <br/>
+                                        Để bắt đầu sử dụng chương trình Xin hãy truy cập vào địa chỉ : <a href="https://{{.Code|ToLower}}.ehoadon.com.vn">https://{{.Code|ToLower}}.ehoadon.com.vn</a><br/>
+                                        Tên đăng nhập : ADMIN <br/>
+                                        Mật khẩu : 123456  <br/>
+                                    </div>
+                                </div>
+                            </div>
+                            {{else if .ShowActiveErrorMsg }}
+                            <div id="registerWrapper">
+                                <div class="column one column_column" style="padding-top:20px; padding-bottom:20px;">
+                                    <div class="fancy_heading">
+                                        <h2 class="title">Yêu cầu đăng ký của quý khách bị lỗi</h2>
+                                        <br/>
+                                        <br/>
+                                        Xin hãy gọi đến số điện thoại hoặc gửi đến email của chúng tôi để được trợ giúp
                                     </div>
                                 </div>
                             </div>

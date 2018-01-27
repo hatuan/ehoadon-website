@@ -147,6 +147,8 @@ func (c *Client) Get(id int64) error {
 
 func (c *Client) GetByCode(code string) error {
 
+	code = strings.ToUpper(code)
+
 	err := DB.QueryRowx("SELECT client.* "+
 		" FROM client "+
 		" WHERE client.code=$1 ", code).StructScan(c)
@@ -377,21 +379,58 @@ func (c *Client) Update() TransactionalInformation {
 }
 
 func (c *Client) createDB(name string) bool {
-	sql := fmt.Sprintf("CREATE USER user_%s WITH PASSWORD '%s'", name, name)
-	_, err := DB.Exec(sql)
-	if err != nil {
+
+	sshConfig := &ssh.ClientConfig{
+		User: settings.Settings.SSHUser,
+		Auth: []ssh.AuthMethod{
+			utils.PublicKeyFile(settings.Settings.SSHPrivateKeyPath),
+		},
+		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
+	}
+
+	client := &utils.SSHClient{
+		Config: sshConfig,
+		Host:   settings.Settings.SSHHost,
+	}
+
+	cmd := &utils.SSHCommand{
+		Path:   fmt.Sprintf("docker exec -it ehoadon_data psql --user postgres -c \"CREATE USER user_%s WITH ENCRYPTED PASSWORD '%s';\"", name, name),
+		Env:    []string{},
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+
+	if err := client.RunCommand(cmd); err != nil {
+		log.Error("command run error: ", err)
 		return false
 	}
 
-	sql = fmt.Sprintf("CREATE DATABASE ehoadon_%s WITH OWNER = user_%s ENCODING='UTF-8'", name, name)
-	_, err = DB.Exec(sql)
-	if err != nil {
+	cmd = &utils.SSHCommand{
+		Path:   fmt.Sprintf("docker exec -it ehoadon_data psql --user postgres -c \"CREATE DATABASE ehoadon_%s WITH OWNER = user_%s ENCODING='UTF-8';\"", name, name),
+		Env:    []string{},
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+
+	if err := client.RunCommand(cmd); err != nil {
+		log.Error("command run error: ", err)
 		return false
 	}
 
-	sql = fmt.Sprintf("REVOKE CONNECT ON DATABASE ehoadon_%s FROM public;", name)
-	_, err = DB.Exec(sql)
-	if err != nil {
+	cmd = &utils.SSHCommand{
+		Path:   fmt.Sprintf("docker exec -it ehoadon_data psql --user postgres -c \"REVOKE CONNECT ON DATABASE ehoadon_%s FROM public;\"", name),
+		Env:    []string{},
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+
+	if err := client.RunCommand(cmd); err != nil {
+		log.Error("command run error: ", err)
 		return false
 	}
 
@@ -430,7 +469,7 @@ func (c *Client) createDocker(name string) bool {
 		return false
 	}
 
-	return false
+	return true
 }
 
 type InitDB struct {

@@ -2,19 +2,19 @@ version: '2'
 services:
   ehoadon-app-{{.Code | ToLower}}:
     image: ehoadon/app
-      environment:
-        GIN_MODE=release
-        GO_ENV=production
-      restart: always
-      container_name: ehoadon_app_{{.Code | ToLower}}
-      environment:
-        - VIRTUAL_HOST={{.Code | ToLower}}.ehoadon.com.vn
-        - LETSENCRYPT_HOST={{.Code | ToLower}}.ehoadon.com.vn
-        - LETSENCRYPT_EMAIL=tuanhoanganh@yahoo.com
-      volumes:
-        - /var/run/docker.sock:/tmp/docker.sock:ro
-        - ${PWD}/goose_dbconf.yml:/app/db/dbconf.yml:ro
-        - ${PWD}/app_setting.json:/app/settings/prod.json:ro
+    environment:
+      GIN_MODE=release
+      GO_ENV=production
+    restart: always
+    container_name: ehoadon_app_{{.Code | ToLower}}
+    environment:
+      - VIRTUAL_HOST={{.Code | ToLower}}.ehoadon.com.vn
+      - LETSENCRYPT_HOST={{.Code | ToLower}}.ehoadon.com.vn
+      - LETSENCRYPT_EMAIL=tuanhoanganh@yahoo.com
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ${PWD}/goose_dbconf.yml:/app/db/dbconf.yml:ro
+      - ${PWD}/app_setting.json:/app/settings/prod.json:ro
 
 networks:
  default:

@@ -8,7 +8,7 @@
     "database" : { 
         "driver_name":"postgres", 
         "user":"user_{{.Code | ToLower}}", 
-        "password":"{{.Code}}", 
+        "password":"{{.Code | ToLower}}", 
         "name":"ehoadon_{{.Code | ToLower}}", 
         "port":"5432", 
         "host":"ehoadon_data" 
