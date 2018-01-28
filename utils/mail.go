@@ -1,4 +1,4 @@
-package models
+package utils
 
 import (
 	"bytes"
@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/mail"
 	"net/smtp"
+	"path/filepath"
 	"strings"
 )
 
@@ -127,7 +128,11 @@ func (r *Mail) SendEmail() (bool, error) {
 }
 
 func (r *Mail) ParseTemplate(templateFileName string, data interface{}) error {
-	t, err := template.ParseFiles(templateFileName)
+	funcMap := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+	file := filepath.Base(templateFileName)
+	t, err := template.New(file).Funcs(funcMap).ParseFiles(templateFileName)
 	if err != nil {
 		return err
 	}

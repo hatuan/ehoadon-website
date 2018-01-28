@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"erpvietnam/ehoadon-website/models"
 	. "erpvietnam/ehoadon-website/settings"
+	"erpvietnam/ehoadon-website/utils"
 	"html/template"
 	"log"
 	"net/http"
@@ -183,7 +184,7 @@ func RegisterNewCompany(c *gin.Context) {
 
 	transInfo := client.Update()
 	if transInfo.ReturnStatus {
-		mail := models.NewMail(client.Email, "Thông báo V/v đăng ký sử dụng hóa đơn điện tử eInvoice", "")
+		mail := utils.NewMail(client.Email, "Thông báo V/v đăng ký sử dụng hóa đơn điện tử eInvoice", "")
 		err = mail.ParseTemplate("./templates/mailActive.html", client)
 		if err != nil {
 			ServerInternalError505(c)
@@ -272,8 +273,28 @@ func RegisterActive(c *gin.Context) {
 	}
 
 	//active
+	// Try connect to DB because func client.Active() cause DB disconnect
+	err = models.DB.Ping()
+	if err != nil {
+		models.DB, err = sqlx.Connect(Settings.Database.DriverName, Settings.GetDbConn())
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	defer models.DB.Close()
 
-	mail := models.NewMail(client.Email, "Thông báo V/v đăng ký sử dụng hóa đơn điện tử eInvoice", "")
+	transInfo = client.UpdateActiveSuccess()
+	if !transInfo.ReturnStatus {
+		notFound, _ := models.InArray(models.ErrClientActiveCodeNotFound, transInfo.ReturnError)
+		if notFound {
+			PageNotFound404(c)
+			return
+		}
+		ServerInternalError505(c)
+		return
+	}
+
+	mail := utils.NewMail(client.Email, "Thông báo V/v đăng ký sử dụng hóa đơn điện tử eInvoice", "")
 	_ = mail.ParseTemplate("./templates/mailActiveSuccess.html", client)
 	_, _ = mail.SendEmail()
 

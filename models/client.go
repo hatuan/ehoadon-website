@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"html/template"
 	"net"
+	"os"
 	"strings"
 
 	"github.com/shopspring/decimal"
@@ -205,6 +206,27 @@ func (c *Client) Active(activeCode string) TransactionalInformation {
 	return TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
+func (c *Client) UpdateActiveSuccess() TransactionalInformation {
+	result, err := DB.Exec("UPDATE client "+
+		" SET is_activated = true, activated_code = '', rec_modified_at = NOW() "+
+		" WHERE is_activated = false AND activated_code=$1", c.ActivatedCode)
+
+	if err != nil {
+		log.Error(err)
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}, ReturnError: []error{err}}
+	}
+
+	changes, err := result.RowsAffected()
+	if err != nil {
+		log.Error(err)
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}, ReturnError: []error{err}}
+	}
+	if changes == 0 {
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientActiveCodeNotFound.Error()}, ReturnError: []error{ErrClientActiveCodeNotFound}}
+	}
+	return TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
+}
+
 func (c *Client) Update() TransactionalInformation {
 	if validateErrs := c.Validate(); len(validateErrs) != 0 {
 		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrClientValidate.Error()}, ReturnError: []error{ErrClientValidate}, ValidationErrors: validateErrs}
@@ -353,11 +375,11 @@ func createNewCompany(name string, success chan bool) {
 	}
 
 	cmd := &utils.SSHCommand{
-		Path: fmt.Sprintf("NEW_COMPANY_NAME=%s /ehoadon/create_new_company.sh", name),
-		Env:  []string{},
-		//Stdin:  os.Stdin,
-		//Stdout: os.Stdout,
-		//Stderr: os.Stderr,
+		Path:   fmt.Sprintf("NEW_COMPANY_NAME=%s /ehoadon/create_new_company.sh", name),
+		Env:    []string{},
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 	}
 
 	if err := client.RunCommand(cmd); err != nil {
