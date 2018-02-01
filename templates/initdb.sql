@@ -41,7 +41,7 @@ VALUES (
     'f', 
     't', 
     'Administrator', 
-    {{.UserProfile.Email}}, 
+    '{{.UserProfile.Email}}', 
     '2014-04-25 10:22:39.007887+07', 
     '', 
     {{.Client.ClientID}},

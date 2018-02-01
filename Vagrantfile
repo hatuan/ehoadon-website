@@ -48,7 +48,6 @@ Vagrant.configure("2") do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder "./", "/home/vagrant/go/src/erpvietnam/ehoadon-website", type: "nfs"
-  config.vm.synced_folder "c:/Projects/PostgreSQL_Vagrant_Data/", "/ehoadon/database/postgres-data", owner: "vagrant", group: "vagrant"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
