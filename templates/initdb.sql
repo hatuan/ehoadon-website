@@ -160,6 +160,7 @@ VALUES (
     NOW()) RETURNING id INTO _CurrencyLCYId;
 
 UPDATE client SET currency_lcy_id = _CurrencyLCYId;
+UPDATE user_profile SET organization_id = _OrganizationID;
 
 END$$;
 -- +goose StatementEnd
